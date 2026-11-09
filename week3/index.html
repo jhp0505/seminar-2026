@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171717" />
+    <meta name="description" content="하나씩, 가볍게. 오늘의 할 일을 기록하고 완료한 일을 보관하세요." />
+    <title>천 개의 할 일 · 오늘 뭐하지</title>
+    <script>
+      try { if (JSON.parse(localStorage.getItem('waffle-week3:data:v1'))?.theme === 'dark') document.documentElement.classList.add('dark'); } catch {}
+    </script>
+  </head>
+  <body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body>
+</html>
