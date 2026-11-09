@@ -8,7 +8,7 @@ test('추가, 수정, 필터, 완료, 보관, 새로고침, 다크 모드, 초�
   await page.reload();
   await page.getByRole('button', { name: '리액트 공부', exact: true }).click();
   await page.getByLabel('할 일 제목').fill('30분 달리기');
-  await page.getByRole('radio', { name: '운동', exact: true }).check();
+  await page.getByRole('dialog').getByText('운동', { exact: true }).click();
   await page.getByRole('button', { name: '저장하기' }).click();
   await page.getByRole('button', { name: '공부', exact: true }).click();
   await expect(page.getByRole('button', { name: '30분 달리기', exact: true })).toHaveCount(0);
@@ -47,7 +47,7 @@ test('닫기·Esc·새로고침은 초안을 유지하고 취소·저장은 지�
   const open = () => page.getByRole('button', { name: '할 일 추가', exact: true }).click();
   await open();
   await page.getByLabel('할 일 제목').fill('임시 메모');
-  await page.getByRole('radio', { name: '집안일' }).check();
+  await page.getByRole('dialog').getByText('집안일', { exact: true }).click();
   await page.keyboard.press('Escape');
   await open();
   await expect(page.getByLabel('할 일 제목')).toHaveValue('임시 메모');
@@ -98,4 +98,22 @@ test('저장 공간 오류가 나면 거짓 성공 없이 모달 입력을 보�
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByLabel('할 일 제목')).toHaveValue('안전하게 저장');
   await expect(page.getByRole('dialog').getByRole('alert')).toContainText('저장하지 못했습니다');
+});
+
+test('라이트·다크·모바일 화면 검토용 캡처', async ({ page }) => {
+  await page.goto('/');
+  for (const title of ['리액트 useContext 과제 시작하기', '아침 30분 산책', '설거지하기']) {
+    await page.getByRole('button', { name: '할 일 추가', exact: true }).click();
+    await page.getByLabel('할 일 제목').fill(title);
+    await page.getByRole('button', { name: '저장하기' }).click();
+  }
+  await page.getByRole('checkbox', { name: '아침 30분 산책 완료' }).check();
+  await page.screenshot({ path: 'test-results/light.png', fullPage: true });
+  await page.getByRole('button', { name: '설정', exact: true }).click();
+  await page.getByRole('switch', { name: '다크 모드' }).click();
+  await page.getByRole('button', { name: /오늘 뭐하지/ }).click();
+  await page.screenshot({ path: 'test-results/dark.png', fullPage: true });
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.getByRole('button', { name: '할 일 추가', exact: true }).click();
+  await page.screenshot({ path: 'test-results/mobile-modal.png', fullPage: true });
 });
