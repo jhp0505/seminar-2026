@@ -8,7 +8,7 @@ Node.js 22 이상에서 저장소를 내려받고 다음 명령을 실행합니�
 
 ```bash
 cd week3
-npm install
+npm ci
 npm run dev
 ```
 
@@ -19,7 +19,7 @@ npx playwright install chromium
 npm run test:e2e         # 실제 브라우저 테스트
 ```
 
-직접 의존성은 정확한 버전으로 고정했습니다. 초기 개발 환경의 npm 네트워크 제한으로 lockfile은 생성하지 않았으며, 최초 설치 시 생성되는 `package-lock.json`을 이후 커밋하면 전이 의존성까지 고정할 수 있습니다.
+의존성 버전은 `package-lock.json`으로 고정했습니다. GitHub Actions에서 단위 테스트 6개, 프로덕션 빌드, 브라우저 시나리오 5개를 검증합니다.
 
 ## 구현 기능
 
