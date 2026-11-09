@@ -1,33 +1,45 @@
-name: Week 3 checks
+name: Validate week3 fork
+
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [feat/week3-thousand-todos]
-    paths: ['week3/**', '.github/workflows/week3.yml']
-  pull_request:
-    paths: ['week3/**', '.github/workflows/week3.yml']
+
 permissions:
   contents: read
+
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-24.04
-    defaults:
-      run:
-        working-directory: week3
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
         with:
-          node-version: 22
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+          repository: jhp0505/frontend-seminar-week3
+          ref: main
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: corepack enable
+      - run: yarn install --no-immutable
+      - name: Normalize initial formatting
+        run: yarn biome check --write .
+      - run: yarn check-all
+      - run: yarn test
+      - run: yarn build
+      - run: yarn playwright install --with-deps chromium
+      - run: yarn test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: week3-build-and-checks
+          name: week3-checks
           path: |
-            week3/dist/
-            week3/package-lock.json
-            week3/test-results/
+            yarn.lock
+            src/
+            tests/
+            e2e/
+            *.json
+            *.ts
+            index.html
+            dist/
+            test-results/
